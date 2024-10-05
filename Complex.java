@@ -33,29 +33,30 @@ public class Complex {
         return imag;
     }
 
-    //слодение
-    public static Complex add(Complex a, Complex b) {
-        return new Complex(a.real + b.real, a.imag + b.imag);
+    //сложение
+    public Complex add(Complex a) {
+        return new Complex(this.real + a.real, this.imag + a.imag);
     }
-    //вычитание
-    public static Complex sub(Complex a, Complex b) {
-        return new Complex(a.real - b.real, a.imag - b.imag);
-    }
-    //умножение
-    public static Complex mul(Complex a, Complex b) {
-        return new Complex(a.real * b.real - a.imag * b.imag, a.real * b.imag + a.imag * b.real);
-    }
-    //деление
-    public static Complex div(Complex a, Complex b) {
-        double root = b.real * b.real + b.imag * b.imag;
 
-        if (root == 0) {
+    //вычитание
+    public Complex sub(Complex a) {
+        return new Complex(this.real - a.real, this.imag - a.imag);
+    }
+
+    //умножение
+    public Complex mul(Complex a) {
+        return new Complex(this.real * a.real - this.imag * a.imag, this.real * a.imag + this.imag * a.real);
+    }
+
+    //деление
+    public Complex div(Complex a) {
+        double root = a.real * a.real + a.imag * a.imag;
+
+        if (root == 0.0) {
             System.out.println("It cannot be divided by zero.");
             return null;
         }
-        else {
-            return new Complex((a.real * b.real + a.imag * b.imag) / root, (a.imag * b.real - a.real * b.imag) / root);
-        }
+        else return new Complex((this.real * a.real + this.imag * a.imag) / root, (this.imag * a.real - this.real * a.imag) / root);
     }
 
     //вывод компл.числа
@@ -67,7 +68,4 @@ public class Complex {
             System.out.printf("%.2f - %.2fi\n", real, -imag);
         }
     }
-
-
-
 }
