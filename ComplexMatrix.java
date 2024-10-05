@@ -48,16 +48,16 @@ public class ComplexMatrix {
     }
 
     //сложение матриц
-    public static ComplexMatrix add(ComplexMatrix a, ComplexMatrix b) {
-        ComplexMatrix result = new ComplexMatrix(a.row, a.col);
-        if (a.row != b.row || a.col != b.col) {
+    public ComplexMatrix add(ComplexMatrix a) {
+        ComplexMatrix result = new ComplexMatrix(this.row, this.col);
+        if (this.row != a.row || this.col != a.col) {
             System.out.println("The matrices must have the same size.");
             return null;
         }
         else {
-            for (int i = 0; i < a.row; i++) {
-                for (int j = 0; j < a.col; j++) {
-                    Complex sum = Complex.add(a.getElement(i, j), b.getElement(i, j));
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.col; j++) {
+                    Complex sum = this.getElement(i, j).add(a.getElement(i, j));
                     result.setElement(i, j, sum);
                 }
             }
@@ -66,16 +66,16 @@ public class ComplexMatrix {
     }
 
     //вычитание матриц
-    public static ComplexMatrix sub(ComplexMatrix a, ComplexMatrix b) {
-        ComplexMatrix result = new ComplexMatrix(a.row, a.col);
-        if (a.row != b.row || a.col != b.col) {
+    public ComplexMatrix sub(ComplexMatrix a) {
+        ComplexMatrix result = new ComplexMatrix(this.row, this.col);
+        if (this.row != a.row || this.col != a.col) {
             System.out.println("The matrices must have the same size.");
             return null;
         }
         else {
-            for (int i = 0; i < a.row; i++) {
-                for (int j = 0; j < a.col; j++) {
-                    Complex subt = Complex.sub(a.getElement(i, j), b.getElement(i, j));
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.col; j++) {
+                    Complex subt = this.getElement(i, j).sub(a.getElement(i, j));
                     result.setElement(i, j, subt);
                 }
             }
@@ -84,19 +84,19 @@ public class ComplexMatrix {
     }
 
     //умножение матрицы на матрицу
-    public static ComplexMatrix mul(ComplexMatrix a, ComplexMatrix b) {
-        ComplexMatrix result = new ComplexMatrix(a.row, a.col);
-        if (a.col != b.row) {
+    public ComplexMatrix mul(ComplexMatrix a) {
+        ComplexMatrix result = new ComplexMatrix(this.row, this.col);
+        if (this.col != a.row) {
             System.out.println("The number of columns of the first matrix should be equal to the number of rows of the second matrix.");
             return null;
         }
         else {
-            for (int i = 0; i < a.row; i++) {
-                for (int j = 0; j < b.col; j++) {
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < a.col; j++) {
                     Complex sum = new Complex();
-                    for (int k = 0; k < a.col; k++) {
-                        Complex mult = Complex.mul(a.getElement(i, k), b.getElement(k, j));
-                        sum = Complex.add(sum, mult);
+                    for (int k = 0; k < this.col; k++) {
+                        Complex mult = this.getElement(i, k).mul(a.getElement(k, j));
+                        sum = sum.add(mult);
                         result.setElement(i, j, sum);
                     }
                 }
@@ -130,46 +130,4 @@ public class ComplexMatrix {
             System.out.println();
         }
     }
-
-
-
-    //с детерминантом что-то не то, даже через гпт решила попробовать, но не фигня:(
-    /*private static void swapRows(ComplexMatrix matrix, int row1, int row2) {
-        Complex[] temp = matrix.matrix[row1];
-        matrix.matrix[row1] = matrix.matrix[row2];
-        matrix.matrix[row2] = temp;
-    }
-    //детерминант матрицы
-    public static double determinant(ComplexMatrix matrix) {
-        if (matrix.row != matrix.col) {
-            throw new IllegalArgumentException("The determinant can only be calculated for square matrices.");
-        }
-
-        double det = 1.0;
-        ComplexMatrix tempMatrix = copyMatrix(matrix);
-
-        for (int i = 0; i < tempMatrix.row; i++) {
-            if (tempMatrix.getElement(i, i).getReal() == 0) {
-                boolean swapped = false;
-                for (int j = i + 1; j < tempMatrix.row; j++) {
-                    if (tempMatrix.getElement(j, i).getReal() != 0) {
-                        swapRows(tempMatrix, i, j);
-                        det = -det;
-                        swapped = true;
-                        break;
-                    }
-                }
-                if (!swapped) return 0;
-            }
-            det *= tempMatrix.getElement(i, i).getReal();
-            for (int j = i + 1; j < tempMatrix.row; j++) {
-                Complex ratio = new Complex(tempMatrix.getElement(j, i).getReal() / tempMatrix.getElement(i, i).getReal(), 0);
-                for (int k = i; k < tempMatrix.col; k++) {
-                    Complex updatedValue = Complex.sub(tempMatrix.getElement(j, k), Complex.mul(ratio, tempMatrix.getElement(i, k)));
-                    tempMatrix.setElement(j, k, updatedValue);
-                }
-            }
-        }
-        return det;
-    }*/
 }
