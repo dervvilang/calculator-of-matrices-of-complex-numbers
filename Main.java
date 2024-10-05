@@ -1,5 +1,3 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
 
@@ -13,16 +11,16 @@ public class Main {
         complex2.printComplex();
 
 
-        Complex resAddC = Complex.add(complex1, complex2);
+        Complex resAddC = complex1.add(complex2);
         System.out.print("Addition of complex1 and complex2: ");
         resAddC.printComplex();
-        Complex resSubC = Complex.sub(complex1, complex2);
+        Complex resSubC = complex1.sub(complex2);
         System.out.print("Subtraction of complex1 and complex2: ");
         resSubC.printComplex();
-        Complex resMulC = Complex.mul(complex1, complex2);
+        Complex resMulC = complex1.mul(complex2);
         System.out.print("Multiplication of complex1 and complex2: ");
         resMulC.printComplex();
-        Complex resDivC = Complex.div(complex1, complex2);
+        Complex resDivC = complex1.div(complex2);
         System.out.print("Division of complex1 and complex2: ");
         resDivC.printComplex();
         System.out.println();
@@ -48,14 +46,14 @@ public class Main {
         System.out.println("Third matrix:");
         matrix3.printMatrix();
 
-        ComplexMatrix resAddM = ComplexMatrix.add(matrix1, matrix2);
-        System.out.println("Addition of complex1 and complex2: ");
+        ComplexMatrix resAddM = matrix1.add(matrix2);
+        System.out.println("Addition of matrix1 and matrix2: ");
         resAddM.printMatrix();
-        ComplexMatrix resSubM = ComplexMatrix.sub(matrix1, matrix2);
-        System.out.println("Subtraction of complex1 and complex2: ");
+        ComplexMatrix resSubM = matrix1.sub(matrix2);
+        System.out.println("Subtraction of matrix1 and matrix2: ");
         resSubM.printMatrix();
-        ComplexMatrix resMulM = ComplexMatrix.mul(matrix1, matrix2);
-        System.out.println("Multiplication of complex1 and complex2: ");
+        ComplexMatrix resMulM = matrix1.mul(matrix2);
+        System.out.println("Multiplication of matrix1 and matrix2: ");
         resMulM.printMatrix();
 
     }
