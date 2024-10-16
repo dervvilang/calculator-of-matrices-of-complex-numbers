@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class ComplexMatrix {
 
     private int row;
@@ -6,6 +8,9 @@ public class ComplexMatrix {
 
     //конструктор 1 для задания матрицы с значениями 0
     public ComplexMatrix(int row, int col) {
+        if (row <= 0 || col <= 0) {
+            throw new IllegalArgumentException("Matrix dimensions must be positive.");
+        }
         this.row = row;
         this.col = col;
         matrix = new Complex[row][col];
@@ -18,10 +23,16 @@ public class ComplexMatrix {
 
     //конструктор 2 для задания матрицы на базе двумерного компл.массива
     public ComplexMatrix(Complex[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            throw new IllegalArgumentException("Matrix cannot be null or empty.");
+        }
         this.row = matrix.length;
         this.col = matrix[0].length;
         this.matrix = new Complex[row][col];
         for (int i = 0; i < row; i++) {
+            if (matrix[i].length != col) {
+                throw new IllegalArgumentException("All rows must have the same number of columns.");
+            }
             for (int j = 0; j < col; j++) {
                 this.matrix[i][j] = new Complex(matrix[i][j].getReal(), matrix[i][j].getImag());
             }
@@ -30,11 +41,17 @@ public class ComplexMatrix {
 
     //сеттер элемента по строке и столбцу на значение копмл.числа
     public void setElement(int row, int col, Complex a) {
+        if (row < 0 || row >= this.row || col < 0 || col >= this.col) {
+            throw new IndexOutOfBoundsException("Invalid indices for matrix.");
+        }
         this.matrix[row][col] = a;
     }
 
     //геттер элемента матрицы по строке и столбцу
     public Complex getElement(int row, int col) {
+        if (row < 0 || row >= this.row || col < 0 || col >= this.col) {
+            throw new IndexOutOfBoundsException("Invalid indices for matrix.");
+        }
         return this.matrix[row][col];
     }
 
@@ -51,8 +68,7 @@ public class ComplexMatrix {
     public ComplexMatrix add(ComplexMatrix a) {
         ComplexMatrix result = new ComplexMatrix(this.row, this.col);
         if (this.row != a.row || this.col != a.col) {
-            System.out.println("The matrices must have the same size.");
-            return null;
+            throw new IllegalArgumentException("The matrices must have the same size.");
         }
         else {
             for (int i = 0; i < this.row; i++) {
@@ -69,8 +85,7 @@ public class ComplexMatrix {
     public ComplexMatrix sub(ComplexMatrix a) {
         ComplexMatrix result = new ComplexMatrix(this.row, this.col);
         if (this.row != a.row || this.col != a.col) {
-            System.out.println("The matrices must have the same size.");
-            return null;
+            throw new IllegalArgumentException("The matrices must have the same size.");
         }
         else {
             for (int i = 0; i < this.row; i++) {
@@ -87,8 +102,7 @@ public class ComplexMatrix {
     public ComplexMatrix mul(ComplexMatrix a) {
         ComplexMatrix result = new ComplexMatrix(this.row, this.col);
         if (this.col != a.row) {
-            System.out.println("The number of columns of the first matrix should be equal to the number of rows of the second matrix.");
-            return null;
+            throw new IllegalArgumentException("The number of columns of the first matrix should be equal to the number of rows of the second matrix.");
         }
         else {
             for (int i = 0; i < this.row; i++) {
@@ -105,6 +119,25 @@ public class ComplexMatrix {
         }
     }
 
+    //рандомайзер значений для матрицы
+    public void Random(double numder) {
+        Random rand = new Random();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                matrix[i][j] = new Complex(rand.nextDouble(numder), rand.nextDouble(numder));
+            }
+        }
+    }
+    //рандомайзер интов для матрицы если надо как "int" с ,00
+    public void RandomInt(int numder) {
+        Random rand = new Random();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                matrix[i][j] = new Complex(rand.nextInt(numder), rand.nextInt(numder));
+            }
+        }
+    }
+
     //копирование матрицы
     public static ComplexMatrix copyMatrix(ComplexMatrix matrix) {
         ComplexMatrix newMatrix = new ComplexMatrix(matrix.row, matrix.col);
@@ -116,16 +149,55 @@ public class ComplexMatrix {
         return newMatrix;
     }
 
+    //вычислям дополнение
+    private Complex getAddit(int a, int b) {
+        ComplexMatrix minor = new ComplexMatrix(row - 1, col - 1);
+        int minorRow = 0;
+        int minorCol = 0;
+
+        for (int i = 0; i < row; i++) {
+            if (i == a) continue;
+            for (int j = 0; j < col; j++) {
+                if (j == b) continue;
+                minor.matrix[minorRow][minorCol] = matrix[i][j];
+                minorCol++;
+            }
+            minorRow++;
+            minorCol = 0;
+        }
+        return (a + b) % 2 == 0 ? minor.getDeterminant() : minor.getDeterminant().mul(new Complex(-1, 0));
+    }
+    //детерминант
+    public Complex getDeterminant() {
+        if (row != col) {
+            throw new IllegalArgumentException("The matrix must have the same size.");
+        }
+
+        if (row == 1) {
+            return matrix[0][0];
+        }
+
+        Complex determinant = new Complex();
+        for (int i = 0; i < row; i++) {
+            determinant = determinant.add(getAddit(i, 0).mul(matrix[i][0]));
+        }
+        return determinant;
+    }
+
     //вывод матрицы фулл
     public void printMatrix() {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                if (matrix[i][j].getImag() >= 0) {
-                    System.out.printf("%.2f + %.2fi  ", matrix[i][j].getReal(), matrix[i][j].getImag());
+                Complex element = matrix[i][j];
+                String formattedElement;
+
+                if (element.getImag() >= 0) {
+                    formattedElement = String.format("%.2f + %.2fi", element.getReal(), element.getImag());
+                } else {
+                    formattedElement = String.format("%.2f - %.2fi", element.getReal(), -element.getImag());
                 }
-                else {
-                    System.out.printf("%.2f - %.2fi  ", matrix[i][j].getReal(), -matrix[i][j].getImag());
-                }
+
+                System.out.printf("%20s", formattedElement);
             }
             System.out.println();
         }
