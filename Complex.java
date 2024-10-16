@@ -53,8 +53,7 @@ public class Complex {
         double root = a.real * a.real + a.imag * a.imag;
 
         if (root == 0.0) {
-            System.out.println("It cannot be divided by zero.");
-            return null;
+            throw new ArithmeticException("Cannot divide by zero.");
         }
         else return new Complex((this.real * a.real + this.imag * a.imag) / root, (this.imag * a.real - this.real * a.imag) / root);
     }
